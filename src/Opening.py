@@ -44,16 +44,52 @@ class Opening:
         self.parameters[parameterKey] = parameterValue
         return self        
 
-    # Defines the vertices and faces        
+    # Defines the vertices and faces 
+    
+
     def generate(self):
         self.vertices = [ 
-                # Définir ici les sommets
-                ]
-        self.faces = [
-                # définir ici les faces
+                [0,0,0], 
+                [0,0, self.parameters['height']], 
+                [self.parameters['width'],0, self.parameters['height']],
+                [self.parameters['width'],0,0],
+                [0,self.parameters['thickness'],0],
+                [0,self.parameters['thickness'], self.parameters['height']], 
+                [self.parameters['width'], self.parameters['thickness'], self.parameters['height']],
+                [self.parameters['width'], self.parameters['thickness'],0]]
+                
+        self.faces = [[0,4,5,1],
+                [2,3,7,6],
+                [1,2,6,5],
+                [0,3,7,4]
                 ]   
         
     # Draws the faces                
-    def draw(self):        
-        # A compléter en remplaçant pass par votre code
-        pass
+    def draw(self):   
+
+        #if self.parameters['edges']==True:
+          #self.drawEdges()
+       
+       
+        gl.glPushMatrix()
+
+        gl.glMatrixMode(gl.GL_MODELVIEW)
+        #gl.glLoadIdentity()
+        gl.glTranslatef(self.parameters['position'][0],self.parameters['position'][1], self.parameters['position'][2])
+       
+        
+        
+        gl.glPolygonMode(gl.GL_FRONT_AND_BACK, gl.GL_FILL) # on trace les faces : GL_FILL
+        gl.glBegin(gl.GL_QUADS) # Tracé d’un quadrilatère
+        gl.glColor3fv([0.5, 0.5, 0.5]) # Couleur gris moyen
+              
+        
+        for i in range(0,len(self.faces)):
+          face=self.faces[i] 
+          gl.glVertex3fv(self.vertices[face[0]])
+          gl.glVertex3fv(self.vertices[face[1]])
+          gl.glVertex3fv(self.vertices[face[2]])
+          gl.glVertex3fv(self.vertices[face[3]])
+        
+        gl.glEnd()
+        gl.glPopMatrix()
